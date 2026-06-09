@@ -20,8 +20,8 @@ gldas_flag=false;
 if contains(ldas_filelist.filenames{1},'GLDAS')
     gldas_flag=true;
 end
-if nargin==9
-    LDASOnlyFlag=varargin{1};
+if ~isempty(varargin) % 7 named args + flag = nargin 8; the old nargin==9
+    LDASOnlyFlag=varargin{1}; % check silently dropped the flag from daily_melt
 end
 ldas_stacked = stackGLDAS(ldas_filelist);
 ldas_subset = subsetGLDAS(ldas_stacked,ldas_topo.CoarseRefMatrix,...

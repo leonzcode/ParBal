@@ -56,7 +56,7 @@ end
     meshgrid(1:OutRasterRef.RasterSize(2),1:OutRasterRef.RasterSize(1));
 if contains(class(OutRasterRef),'MapCellsReference')
     [XWorld, YWorld] = intrinsicToWorld(OutRasterRef,XIntrinsic,YIntrinsic);
-    [lat,lon] = minvtran(OutStruct,XWorld,YWorld);
+    [lat,lon] = mstruct_inv(OutStruct,XWorld,YWorld); % minvtran removed in R2026a
 elseif contains(class(OutRasterRef),'GeographicCellsReference')
     [lat,lon] = intrinsicToGeographic(OutRasterRef,XIntrinsic,YIntrinsic);
 else
@@ -68,7 +68,7 @@ if isempty(InStruct) % input grid is lat-lon
     Xq = lon;
     Yq = lat;
 else
-    [Xq,Yq] = mfwdtran(InStruct,lat,lon);
+    [Xq,Yq] = mstruct_fwd(InStruct,lat,lon); % mfwdtran removed in R2026a
 end
 
 geolocated = ~isempty(inLat); % otherwise geographic or projected
@@ -129,7 +129,12 @@ if any(t(:)) && ~strcmp(method,'nearest')
             F = scatteredInterpolant(X(:),Y(:),A(:),'nearest','none');
             NN = F(Xq,Yq);
         else
-            NN = interp2(X,Y,A,Xq,Yq,'nearest');
+            % clamp query points to the input hull so output pixels in the
+            % half-cell border sliver get the nearest edge value, not NaN
+            % (matters when the input is an already-subset coarse grid)
+            Xc = min(max(Xq,min(X(:))),max(X(:)));
+            Yc = min(max(Yq,min(Y(:))),max(Y(:)));
+            NN = interp2(X,Y,A,Xc,Yc,'nearest');
         end
         B(t) = NN(t);
     else
@@ -142,7 +147,10 @@ if any(t(:)) && ~strcmp(method,'nearest')
                     F = scatteredInterpolant(X(:),Y(:),V(:),'nearest','none');
                     NN = F(Xq,Yq);
                 else
-                    NN = interp2(X,Y,A(:,:,k),Xq,Yq,'nearest');
+                    % clamp to input hull, as in the 2D case above
+                    Xc = min(max(Xq,min(X(:))),max(X(:)));
+                    Yc = min(max(Yq,min(Y(:))),max(Y(:)));
+                    NN = interp2(X,Y,A(:,:,k),Xc,Yc,'nearest');
                 end
                 B1(t) = NN(t);
                 B(:,:,k) = B1;
@@ -380,7 +388,7 @@ else
             [XIntrinsic,YIntrinsic] =...
                 meshgrid([1 InRR.RasterSize(2)],[1 InRR.RasterSize(1)]);
             [xWorld,yWorld] = intrinsicToWorld(InRR,XIntrinsic, YIntrinsic);
-            [latlim,lonlim] = minvtran(InS,xWorld,yWorld);
+            [latlim,lonlim] = mstruct_inv(InS,xWorld,yWorld); % minvtran removed in R2026a
         end
     end
 end
@@ -406,7 +414,7 @@ if isempty(p.Results.rasterref)
             xlimit = [min(lonlim(:)) max(lonlim(:))];
             ylimit = [min(latlim(:)) max(latlim(:))];
         else
-            [x,y] = mfwdtran(OutS,latlim,lonlim);
+            [x,y] = mstruct_fwd(OutS,latlim,lonlim); % mfwdtran removed in R2026a
             xlimit = [min(x(:)) max(x(:))];
             ylimit = [min(y(:)) max(y(:))];
         end

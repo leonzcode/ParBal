@@ -235,10 +235,16 @@ for h=1:num_times
 %     if ~gldasflag
 %         windS.U=gldasInterp.UGRD(:,:,h);
 %         windS.V=gldasInterp.VGRD(:,:,h);
-%       use MERRA for all winds
-        windS.windflag=false;
-        windS.U=merraInterp.ULML(:,:,h);
-        windS.V=merraInterp.VLML(:,:,h);
+%       use MERRA for all winds, except in LDAS-only mode (no MERRA there:
+%       fall back to GLDAS wind speed, the originally commented-out branch)
+        if LDASOnlyFlag && gldasflag
+            windS.windspd=gldasInterp.Wind_f_inst(:,:,h);
+            windS.windflag=true;
+        else
+            windS.windflag=false;
+            windS.U=merraInterp.ULML(:,:,h);
+            windS.V=merraInterp.VLML(:,:,h);
+        end
 %     else
 %         windS.windspd=gldasInterp.Wind_f_inst(:,:,h);
 %         windS.windflag=true;

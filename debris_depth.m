@@ -49,8 +49,16 @@ for i=1:length(d)
         info=geotiffinfo(fname);
         mstruct=geotiff2mstruct(info);
         %AST08 TIFFS are rotated, so need a geolocated input to reprojectRaster
-        [x,y] = pixcenters(r,size(Tsfc));
-        [lat,lon] = minvtran(mstruct,x,y);
+        if exist('pixcenters','file') % removed in R2026a
+            [x,y] = pixcenters(r,size(Tsfc));
+        else
+            % pixcenters equivalent that also handles rotational refmats:
+            % [x y] = [row col 1] * r
+            [cgrid,rgrid] = meshgrid(1:size(Tsfc,2),1:size(Tsfc,1));
+            x = r(3,1) + rgrid*r(1,1) + cgrid*r(2,1);
+            y = r(3,2) + rgrid*r(1,2) + cgrid*r(2,2);
+        end
+        [lat,lon] = mstruct_inv(mstruct,x,y); % minvtran removed in R2026a
         Tsfc=reprojectRaster(Tsfc,[],[],...
             topo.hdr.ProjectionStructure,'lat',lat,...
             'lon',lon,'rasterref',...

@@ -47,8 +47,10 @@ FOREST.tau(LandCover.cc > 0 & FOREST.tau==1)=0.30;
 %classification map
 FOREST.type.list={'deciduous','coniferous'};
 FOREST.type.num_val=zeros(size(FOREST.tau));
-FOREST.type.num_val(FOREST.tau==0.60)=1;
-FOREST.type.num_val(FOREST.tau==0.30)=2;
+% single() literals: in R2026a, single-vs-double == compares in double
+% precision, so tau==0.60 with a double literal never matches
+FOREST.type.num_val(FOREST.tau==single(0.60))=1;
+FOREST.type.num_val(FOREST.tau==single(0.30))=2;
 
 %vegetation snow holding depth (for winds)
 FOREST.shd=zeros(size(FOREST.tau));

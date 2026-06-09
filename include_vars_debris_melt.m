@@ -35,7 +35,7 @@ end
 %use midpoints
 x=mean(topo.hdr.RasterReference.XWorldLimits);
 y=mean(topo.hdr.RasterReference.YWorldLimits);
-[~,lon]=minvtran(topo.hdr.ProjectionStructure,x,y);
+[~,lon]=mstruct_inv(topo.hdr.ProjectionStructure,x,y); % minvtran removed in R2026a
 
 %convert to - for west of PM and as fraction of 24 hr
 tz=-timezone(lon)/24;

@@ -43,10 +43,18 @@ switch S.gridtype
         lat = S.Lat;
         lon = S.Lon;
     case 'projected'
-        [x,y] = pixcenters(S.RefMatrix,size(topo.slope),'makegrid');
-        [lat,lon] = minvtran(S.ProjectionStructure,x,y);
+        if exist('pixcenters','file') % removed in R2026a
+            [x,y] = pixcenters(S.RefMatrix,size(topo.slope),'makegrid');
+        else
+            [x,y] = worldGrid(refmatToMapRasterReference(S.RefMatrix,size(topo.slope)));
+        end
+        [lat,lon] = mstruct_inv(S.ProjectionStructure,x,y); % minvtran removed in R2026a
     case 'geographic'
-        [lon,lat] = pixcenters(S.RefMatrix,size(topo.slope),'makegrid');
+        if exist('pixcenters','file') % removed in R2026a
+            [lon,lat] = pixcenters(S.RefMatrix,size(topo.slope),'makegrid');
+        else
+            [lat,lon] = geographicGrid(refmatToGeoRasterReference(S.RefMatrix,size(topo.slope)));
+        end
     otherwise
         error('S.gridtype unknown')
 end

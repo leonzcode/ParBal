@@ -35,7 +35,7 @@ switch proj
         hdr.Lon = h5read(h5file,[location '/longitude']);
     otherwise
         info=h5info(h5file,projLocation);
-        nFields = size(info.Attributes);
+        nFields = numel(info.Attributes); % size() returns a vector; 1:vector is an error in R2026a
         hdr.gridtype = 'projected';
         hdr.RefMatrix = h5readatt(h5file,location,'ReferencingMatrix');
         hdr.RasterReference = refmatToMapRasterReference(hdr.RefMatrix,rastersize);

@@ -95,7 +95,7 @@ FOREST = makeFOREST(LandCover);
 %use midpoints
 x=mean(topo.hdr.RasterReference.XWorldLimits);
 y=mean(topo.hdr.RasterReference.YWorldLimits);
-[~,lon]=minvtran(topo.hdr.ProjectionStructure,x,y);
+[~,lon]=mstruct_inv(topo.hdr.ProjectionStructure,x,y); % minvtran removed in R2026a
 
 %convert to - for west of PM and as fraction of 24 hr
 tz=-timezone(lon)/24;
@@ -107,9 +107,9 @@ if contains(ldas_dem_dir,'NLDAS')
 elseif contains(ldas_dem_dir,'GLDAS')
     ldas.var={'Tair_f_inst','Psurf_f_inst',...
         'Qair_f_inst','SWE_inst'};
-    %add in radiation if LDAS only
+    %add in radiation if LDAS only; also wind, since there's no MERRA for it
     if LDASOnlyFlag
-        ldas.var=['SWdown_f_tavg','LWdown_f_tavg',ldas.var];
+        ldas.var=['SWdown_f_tavg','LWdown_f_tavg','Wind_f_inst',ldas.var];
     end
 end
 
