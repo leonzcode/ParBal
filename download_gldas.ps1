@@ -10,17 +10,17 @@
            machine urs.earthdata.nasa.gov login YOUR_USERNAME password YOUR_PASSWORD
 
   USAGE (from PowerShell):
-    cd E:\ucsb\code\ParBal
+    cd D:\code\ucsb\ParBal
     .\download_gldas.ps1
   or point it at a specific list / output folder:
-    .\download_gldas.ps1 -List "$env:USERPROFILE\Downloads\subset_...txt" -Root "E:\ucsb\data\ParBal\Shasta\GLDAS"
+    .\download_gldas.ps1 -List "$env:USERPROFILE\Downloads\subset_...txt" -Root "D:\code\ucsb\data\ParBal\Shasta\GLDAS"
 
   It is RESUMABLE: re-run it any time; files already present are skipped.
   Failed downloads are logged to <Root>\_failed.txt so you can see what to retry.
 #>
 param(
     [string]$List   = "",
-    [string]$Root   = "E:\ucsb\data\ParBal\Shasta\GLDAS",
+    [string]$Root   = "D:\code\ucsb\data\ParBal\Shasta\GLDAS",
     [string]$Netrc  = "$env:USERPROFILE\_netrc"
 )
 

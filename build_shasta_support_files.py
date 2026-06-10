@@ -30,7 +30,7 @@ import h5py
 import numpy as np
 from pyproj import CRS, Transformer
 
-DATA   = r"E:\ucsb\data\ParBal\Shasta"
+DATA   = r"D:\code\ucsb\data\ParBal\Shasta"
 TOPO   = DATA + r"\inputs\ShastaTopography.h5"
 CCMAT  = DATA + r"\inputs\cc_h08v04.mat"
 ELEV   = DATA + r"\inputs\GLDASp4_elevation_025d.nc4"

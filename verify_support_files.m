@@ -1,7 +1,7 @@
 % VERIFY_SUPPORT_FILES Structural check of the two built Stage-1 support files.
 % Reads them exactly as ParBal does (include_vars_melt.m / load_coarse_topo.m).
-lcfile = 'E:\ucsb\data\ParBal\Shasta\inputs\Shasta_landcover.h5';
-ltfile = 'E:\ucsb\data\ParBal\Shasta\GLDAS_topo.h5';
+lcfile = 'D:\code\ucsb\data\ParBal\Shasta\inputs\Shasta_landcover.h5';
+ltfile = 'D:\code\ucsb\data\ParBal\Shasta\GLDAS\GLDAS_topo.h5';
 
 % --- landcover, as include_vars_melt.m:85-86 reads it ---
 LandCover.Z  = h5read(lcfile,'/Grid/Z');

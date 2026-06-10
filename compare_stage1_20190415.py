@@ -12,15 +12,15 @@ import matplotlib.pyplot as plt
 
 DAY = 196  # 0-based index: Apr 15 2019 (Oct 1 = 0)
 
-with h5py.File(r"E:\ucsb\data\ParBal\Shasta\energy\20190415.mat", "r") as f:
+with h5py.File(r"D:\code\ucsb\data\ParBal\Shasta\energy\20190415.mat", "r") as f:
     M = f["M"][()].T.astype(np.float32)            # -> MATLAB (169,166)
 M[M == 65535] = np.nan
 mf = 3600.0 / (1000 * 3.34e5) * 1000
-with h5py.File(r"E:\ucsb\data\ParBal\Shasta\inputs\fsca_Shasta_2019.h5", "r") as f:
+with h5py.File(r"D:\code\ucsb\data\ParBal\Shasta\inputs\fsca_Shasta_2019.h5", "r") as f:
     fsca = f["Grid/MODIS_GRID_500m/snow_fraction"][DAY, :, :].T.astype(np.float32) / 100.0
 ours = M * mf * fsca
 
-with h5py.File(r"E:\ucsb\data\ParBal\Shasta\reconstruction_Shasta_2019.h5", "r") as f:
+with h5py.File(r"D:\code\ucsb\data\ParBal\Shasta\reconstruction_Shasta_2019.h5", "r") as f:
     off = f["Grid/melt"][DAY, :, :].astype(np.float32).T
 off[off == 65535] = np.nan
 
@@ -48,5 +48,5 @@ ax[2].set_xlabel("official (mm)")
 ax[2].set_ylabel("Leon's (mm)")
 ax[2].set_title("pixel-by-pixel")
 fig.tight_layout()
-fig.savefig(r"E:\ucsb\data\ParBal\Shasta\outputs\compare_stage1_20190415.png", dpi=130)
+fig.savefig(r"D:\code\ucsb\data\ParBal\Shasta\outputs\compare_stage1_20190415.png", dpi=130)
 print("saved compare_stage1_20190415.png")

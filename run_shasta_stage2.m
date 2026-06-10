@@ -1,14 +1,20 @@
-function run_shasta_stage2
+function run_shasta_stage2(rFile)
 % RUN_SHASTA_STAGE2  Driver for ParBal Stage 2 (reconstructSWE) on Shasta.
 % Reads the daily YYYYMMDD.mat files written by Stage 1 and reconstructs the
 % SWE/melt cube. Run AFTER run_shasta_stage1 has populated the energy folder.
+%
+%   run_shasta_stage2                runs with the default output file below
+%   run_shasta_stage2('...demo.h5')  writes to a different file (e.g. for demos,
+%                                    so existing results are not overwritten)
 
-addpath('E:\ucsb\code\ParBal');
+addpath('D:\code\ucsb\ParBal');
 
 poolsize   = 4;                                                       % parallel workers
-energy_dir = 'E:\ucsb\data\ParBal\Shasta\energy';                         % .mat files from Stage 1
-sFile      = 'E:\ucsb\data\ParBal\Shasta\inputs\fsca_Shasta_2019.h5';     % the fSCA cube
-rFile      = 'E:\ucsb\data\ParBal\Shasta\outputs\my_reconstruction_Shasta_2019.h5';
+energy_dir = 'D:\code\ucsb\data\ParBal\Shasta\energy';                         % .mat files from Stage 1
+sFile      = 'D:\code\ucsb\data\ParBal\Shasta\inputs\fsca_Shasta_2019.h5';     % the fSCA cube
+if nargin < 1
+    rFile = 'D:\code\ucsb\data\ParBal\Shasta\outputs\my_reconstruction_Shasta_2019.h5';
+end
 
 % ---- pre-flight: make sure Stage 1 actually ran ----
 if exist(sFile,'file')~=2,  error('fSCA missing: %s', sFile); end
@@ -24,7 +30,7 @@ fprintf('found %d daily energy files in %s\n', nmat, energy_dir);
 %   with    canopycoverfile: corr 0.975, bias +26.2%, RMSE 237 mm
 % i.e. UCSB evidently did NOT apply the viewable-gap correction fsca/(1-cc)
 % for the Shasta product, so the default here is without. To enable:
-%   ccfile = 'E:\ucsb\data\ParBal\Shasta\inputs\Shasta_landcover.h5';
+%   ccfile = 'D:\code\ucsb\data\ParBal\Shasta\inputs\Shasta_landcover.h5';
 %   reconstructSWE(poolsize, energy_dir, sFile, rFile, 'canopycoverfile', ccfile);
 reconstructSWE(poolsize, energy_dir, sFile, rFile);
 fprintf('Stage 2 done -> %s\n', rFile);

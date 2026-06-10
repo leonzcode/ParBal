@@ -26,7 +26,7 @@ from scipy import ndimage
 
 FILLV = 65535  # uint16 fill in the WUS mosaic (no snow / no retrieval)
 
-INPUTS = r"E:\ucsb\data\ParBal\Shasta\inputs"
+INPUTS = r"D:\code\ucsb\data\ParBal\Shasta\inputs"
 MOSAIC = INPUTS + r"\wus_mosaic2019.h5"
 CUBE   = INPUTS + r"\fsca_Shasta_2019.h5"
 ORIG   = INPUTS + r"\fsca_Shasta_2019_fscaonly_orig.h5"

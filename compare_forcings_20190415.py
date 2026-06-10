@@ -13,9 +13,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-OURS = r"E:\ucsb\data\ParBal\Shasta\energy\20190415.mat"
-UCSB = r"E:\ucsb\data\ParBal\Shasta\ucsb_stage1\20190415.h5"
-OUT = r"E:\ucsb\data\ParBal\Shasta\outputs\compare_forcings_20190415.png"
+OURS = r"D:\code\ucsb\data\ParBal\Shasta\energy\20190415.mat"
+UCSB = r"D:\code\ucsb\data\ParBal\Shasta\ucsb_stage1\20190415.h5"
+OUT = r"D:\code\ucsb\data\ParBal\Shasta\outputs\compare_forcings_20190415.png"
 
 def ours_var(f, name, fill, scale=1.0, offset=0.0):
     x = f[name][()].astype(np.float32)          # h5py (24,166,169)

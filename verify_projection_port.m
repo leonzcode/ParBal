@@ -5,8 +5,8 @@
 %   3. TopoSunAngle 'projected' case (per-pixel lat/lon -> sun angles)
 %   4. load_coarse_topo -> reprojectRaster geographic->projected
 % Cross-check the lat/lon numbers against pyproj (independent implementation).
-topofile = 'E:\ucsb\data\ParBal\Shasta\inputs\ShastaTopography.h5';
-ltfile   = 'E:\ucsb\data\ParBal\Shasta\GLDAS_topo.h5';
+topofile = 'D:\code\ucsb\data\ParBal\Shasta\inputs\ShastaTopography.h5';
+ltfile   = 'D:\code\ucsb\data\ParBal\Shasta\GLDAS\GLDAS_topo.h5';
 
 fprintf('minvtran exists: %d (0 expected on R2026a)\n', exist('minvtran','file'));
 

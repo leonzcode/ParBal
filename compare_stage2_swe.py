@@ -12,11 +12,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-OURS = r"E:\ucsb\data\ParBal\Shasta\outputs\my_reconstruction_Shasta_2019_nocc.h5"
+OURS = r"D:\code\ucsb\data\ParBal\Shasta\outputs\my_reconstruction_Shasta_2019_nocc.h5"
 # no-canopy = the validated config (A/B: corr 0.978, bias -3.0% vs official;
 # the canopy-ON file my_reconstruction_Shasta_2019.h5 came out +26.2%)
-OFF = r"E:\ucsb\data\ParBal\Shasta\reconstruction_Shasta_2019.h5"
-OUT = r"E:\ucsb\data\ParBal\Shasta\outputs\compare_swe_final.png"
+OFF = r"D:\code\ucsb\data\ParBal\Shasta\reconstruction_Shasta_2019.h5"
+OUT = r"D:\code\ucsb\data\ParBal\Shasta\outputs\compare_swe_final.png"
 FILL = 65535
 APR1 = 182  # 0-based day index (Oct 1 = 0)
 
