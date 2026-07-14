@@ -35,20 +35,23 @@ FOREST.h=FOREST.u;
 
 deciduous_fraction=squeeze(LandCover.Z(:,:,1));
 coniferous_fraction=squeeze(LandCover.Z(:,:,2));
+% single to match FOREST.tau, otherwise the == checks below never match
+tau_deciduous=single(0.60);
+tau_coniferous=single(0.30);
 % Set values for transmissivity
 FOREST.tau(deciduous_fraction > 0 & ...
-    deciduous_fraction >= coniferous_fraction)=0.60;%Deciduous
+    deciduous_fraction >= coniferous_fraction)=tau_deciduous;%Deciduous
 FOREST.tau(coniferous_fraction > 0 & ...
-    coniferous_fraction >= deciduous_fraction)=0.30;%Coniferous
+    coniferous_fraction >= deciduous_fraction)=tau_coniferous;%Coniferous
 % Set any remaining values w/ cc>0 but tau==1 to coniferous
-FOREST.tau(LandCover.cc > 0 & FOREST.tau==1)=0.30;
+FOREST.tau(LandCover.cc > 0 & FOREST.tau==1)=tau_coniferous;
 
 
 %classification map
 FOREST.type.list={'deciduous','coniferous'};
 FOREST.type.num_val=zeros(size(FOREST.tau));
-FOREST.type.num_val(FOREST.tau==0.60)=1;
-FOREST.type.num_val(FOREST.tau==0.30)=2;
+FOREST.type.num_val(FOREST.tau==tau_deciduous)=1;
+FOREST.type.num_val(FOREST.tau==tau_coniferous)=2;
 
 %vegetation snow holding depth (for winds)
 FOREST.shd=zeros(size(FOREST.tau));
