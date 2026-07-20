@@ -1,14 +1,14 @@
 function lai=make_lai(type, dateval)
 %input: forest type raster where
-% 1 coniferous
-% 2 deciduous 
-% dateval, matlab datetime
+% 1 deciduous
+% 2 coniferous
+% dateval, MATLAB datenum
 
 %output lai: leaf area index for two veg types
 
 %type
 vlai_summer=[2.5 2.5];
-vlai_winter=[2.5 0.5];
+vlai_winter=[0.5 2.5];
 
 % Note: A maximum forest LAI of 5.0 will give almost zero (like
 % 10 W m^2) incoming solar under the canopy.  Values for Fraser
