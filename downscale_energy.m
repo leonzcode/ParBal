@@ -22,6 +22,9 @@ function downscale_energy(sFileDay,sFile,topofile,landcoverfile,...
 % optional - boolean flag for LDAS only mode (true) - normally assume false and run w/ LDAS
 % + CERES. If true, all other CERES inputs are ignored
 % 2nd optional arg: boolean flag for outputting metvars
+% 3rd optional arg: wind source, 'merra' (default) or 'gldas'.
+%   'merra' - MERRA U/V downscaled through topo_winds (terrain + canopy)
+%   'gldas' - GLDAS scalar wind speed used directly, topo_winds not called
 % numarg=11;
 % 
 % if isdeployed && nargin~=numarg
@@ -55,9 +58,17 @@ end
 
 metvars_flag=false;
 addOptional(p,'metvars_flag',@islogical);
-if nargin==14
+if nargin>=14
     metvars_flag=varargin{2};
 end
+
+%3rd optional arg: wind source, 'merra' (default) or 'gldas'
+windsource='merra';
+if nargin>=15
+    windsource=varargin{3};
+end
+assert(any(strcmpi(windsource,{'merra','gldas'})),...
+    'windsource must be ''merra'' or ''gldas'', not ''%s''',windsource);
 
 parse(p,sFileDay,sFile,topofile,landcoverfile,ldas_dir,ldas_topo_file,...
     ceres_dir,ceres_topofile,merra_dir,merra_topofile,outdir,LDASOnlyFlag,metvars_flag)
@@ -71,8 +82,8 @@ end
 [FOREST, topo, ldas, ldas_topo, dateval, sFile, ceres,...
     ceres_topo, merra, merra_topo, tz, outfile]=include_vars_melt(sFileDay,...
     sFile,topofile,landcoverfile,ldas_dir,ldas_topo_file,ceres_dir,ceres_topofile,...
-    merra_dir,merra_topofile,outdir,LDASOnlyFlag);
+    merra_dir,merra_topofile,outdir,LDASOnlyFlag,windsource);
 
 %run downscaling
 daily_melt(dateval,ldas,ceres,topo,ldas_topo,ceres_topo,merra,merra_topo,...
-    tz,FOREST,sFile,outfile,fast_flag,LDASOnlyFlag,metvars_flag)
+    tz,FOREST,sFile,outfile,fast_flag,LDASOnlyFlag,metvars_flag,windsource)

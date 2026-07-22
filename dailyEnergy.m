@@ -23,6 +23,10 @@ function dailyEnergy(topo,gldasInterp,gldas_topo,ceresInterp,...
 % for 'normal';
 %   FOREST - forest structure
 %   sFile - h5 sca file
+%   optional 3rd: windsource - 'merra' (default) uses MERRA U/V downscaled
+%   through topo_winds; 'gldas' uses the GLDAS scalar wind speed directly
+%   and topo_winds is not called. Note: 'gldas' mode still requires the
+%   MERRA inputs; they are loaded and interpolated but unused for wind.
 % for 'debris'
 %   'albedo' - albedo of debris cover, n x m raster
 %   'd' - debris depth raster (depth depth in meters)
@@ -49,10 +53,17 @@ function dailyEnergy(topo,gldasInterp,gldas_topo,ceresInterp,...
 
 %default number of times during the day to process (24)
 num_times=length(gldasInterp.datevalsUTC);
+%wind source: 'merra' (default) uses MERRA U/V through topo_winds; 'gldas'
+%uses the GLDAS scalar wind speed directly. Set for 'normal' mode only; the
+%debris modes keep the default.
+windsource='merra';
 switch mode
     case 'normal'
         FOREST=varargin{1};
         sFile=varargin{2};
+        if length(varargin)>=3 && ~isempty(varargin{3})
+            windsource=varargin{3};
+        end
         todays_dateval=floor(gldasInterp.datevalsLocal(1));
        %check for deltavis 
        group = findMODISh5group(sFile,'500m');
@@ -229,20 +240,18 @@ for h=1:num_times
         in.sw(:,:,h),...
         gldas_topo,topo,mode,sw_opt_input);
         fprintf('shortwave & albedo done for %s (%s UTC)\n',Localstring,UTCstring);
-        %create wind structure depending on whether its GLDAS (speed only)
-        %or NLDAS (U&V)
-        %needed for parfor loop
-%     if ~gldasflag
-%         windS.U=gldasInterp.UGRD(:,:,h);
-%         windS.V=gldasInterp.VGRD(:,:,h);
-%       use MERRA for all winds
-        windS.windflag=false;
-        windS.U=merraInterp.ULML(:,:,h);
-        windS.V=merraInterp.VLML(:,:,h);
-%     else
-%         windS.windspd=gldasInterp.Wind_f_inst(:,:,h);
-%         windS.windflag=true;
-%     end
+        %create wind structure, needed for parfor loop.
+        %windflag false: U,V components, downscaled in run_ebalance through
+        %topo_winds (terrain adjustment + canopy attenuation).
+        %windflag true: scalar wind speed used as is, topo_winds not called.
+        if strcmpi(windsource,'gldas')
+            windS.windflag=true;
+            windS.windspd=gldasInterp.Wind_f_inst(:,:,h);
+        else
+            windS.windflag=false;
+            windS.U=merraInterp.ULML(:,:,h);
+            windS.V=merraInterp.VLML(:,:,h);
+        end
     %solve the energy balance
         [out.M(:,:,h),out.Tsfc(:,:,h),out.Lin(:,:,h),out.LinZ(:,:,h),...
             out.Lout(:,:,h),out.sensible(:,:,h),out.latent(:,:,h),...
