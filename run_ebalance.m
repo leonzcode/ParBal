@@ -15,7 +15,7 @@ function [M,Tsfc,Lin,LinZ,Lout,sensible,latent,G,windspd,Td,ea,opt_out] = ...
 % Sin - dowscaled global shortwave, W/m^2
 % topo - structure with fine scale topographic information from GetTopography
 % windS - wind structure containing wind flag and either:
-% U,V (windflag true) or wind speed scalar (windflag false), m/s
+% U,V (windflag false) or wind speed scalar (windflag true), m/s
 % fast flag - true - only solve for M; false - solve for all outputs; only set for 'normal'
 % mode, either normal - snow/ice melt;
 % debris - ice melt under debris;

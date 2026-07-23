@@ -1,9 +1,16 @@
 function [FOREST, topo, ldas, ldas_topo, dateval, sFile, ceres, ...
     ceres_topo, merra, merra_topo, tz,outfile]=include_vars_melt(sFileDay,sFile,topofile,...
     landcoverfile,ldas_dir,ldas_dem_file,ceres_dir,ceres_topofile,merra_dir,merra_topofile,...
-    outdir,LDASOnlyFlag)
+    outdir,LDASOnlyFlag,varargin)
 % for each day or set of days
 % assemble variables needed to downscale energy balance
+% optional last arg: wind source, 'merra' (default) or 'gldas'. Only 'gldas'
+% needs the scalar wind speed loaded from the LDAS files.
+
+windsource='merra';
+if ~isempty(varargin)
+    windsource=varargin{1};
+end
 
 %convert to Azure paths
 [fsca_dir,fname,ext] = fileparts(sFile);
@@ -103,10 +110,16 @@ ldas=make_ldas_filelist(dateval,ldas_dir,tz);
 
 %LDAS variable list
 if contains(ldas_dem_dir,'NLDAS')
+    assert(~strcmpi(windsource,'gldas'),...
+        'windsource ''gldas'' requires GLDAS forcing, but NLDAS inputs were given');
     ldas.var ={'TMP','PRES','UGRD','VGRD','SPFH'};
 elseif contains(ldas_dem_dir,'GLDAS')
     ldas.var={'Tair_f_inst','Psurf_f_inst',...
         'Qair_f_inst','SWE_inst'};
+    %scalar wind speed, only loaded when GLDAS is the wind source
+    if strcmpi(windsource,'gldas')
+        ldas.var=[ldas.var,'Wind_f_inst'];
+    end
     %add in radiation if LDAS only
     if LDASOnlyFlag
         ldas.var=['SWdown_f_tavg','LWdown_f_tavg',ldas.var];

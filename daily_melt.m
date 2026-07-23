@@ -1,5 +1,6 @@
 function daily_melt(dateval,gldas_filelist,ceres,topo,gldas_topo,ceres_topo,...
-    merra,merra_topo,tz,FOREST,sFile,outfile,fast_flag,LDASOnlyFlag,metvars_flag)
+    merra,merra_topo,tz,FOREST,sFile,outfile,fast_flag,LDASOnlyFlag,metvars_flag,...
+    varargin)
 % loads,stacks,subsets,and interpolates GLDAS data for a single day
 %then calls daily_energy and saves energy outputs
 %INPUT
@@ -19,6 +20,13 @@ function daily_melt(dateval,gldas_filelist,ceres,topo,gldas_topo,ceres_topo,...
 % only set for 'normal'
 % LDASOnlyFlag - run w/ only LDAS inputs
 % metvars_flag - true, save met vars; false - dont save met vars
+% optional last arg: wind source, 'merra' (default) or 'gldas', passed to
+% dailyEnergy
+
+windsource='merra';
+if ~isempty(varargin)
+    windsource=varargin{1};
+end
 
 [fsca,~,hdr]=GetEndmember(sFile,'snow',dateval);
 %if the topo hdr doesn't match the fsca hdr, reproject
@@ -41,6 +49,6 @@ disp(['-->> prepped forcings in ' num2str(round(etime(t2,t1))) ...
 t1=clock;
 dailyEnergy(topo,gldasInterp,gldas_topo,ceresInterp,...
         ceres_topo,merraInterp,merra_topo,fast_flag,metvars_flag,'normal',...
-        outfile,FOREST,sFile);
+        outfile,FOREST,sFile,windsource);
 t2=clock;
 disp(['dailyEnergy in ' num2str(roundn(etime(t2,t1)/60,-1)) ' minutes for ',dateS])
