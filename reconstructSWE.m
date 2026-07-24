@@ -32,8 +32,8 @@ addRequired(p,'energy_dir',@ischar)
 addRequired(p,'sFile',@ischar)
 addRequired(p,'rFile',@ischar)
 addParameter(p,'maxswefile',defaultmaxswe,@ischar);
-addParameter(p,'watermaskfile',defaultwatermask,@ischar);
-addParameter(p,'canopycoverfile',defaultcanopycover,@ischar);
+addParameter(p,'watermaskfile',defaultwatermask,@(x)ischar(x)||isempty(x));
+addParameter(p,'canopycoverfile',defaultcanopycover,@(x)ischar(x)||isempty(x));
 addParameter(p,'matdates',defaultmatdates,@isnumeric);
 addParameter(p,'binarymodevalue',defaultbinarymodevalue,@isnumeric);
 
