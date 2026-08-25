@@ -31,12 +31,12 @@ T_fineC=T_fine-273.15;
 
 b=zeros(size(T_fineC));
 c=zeros(size(T_fineC));
-b(:,:)=22.587;
-c(:,:)=273.86;
+b(:,:)=17.625;
+c(:,:)=243.04;
 %recalc for below freezing
 if any(T_fineC(:)<=0)
-    b(T_fineC<=0)=17.625;
-    c(T_fineC<=0)=243.04;
+    b(T_fineC<=0)=22.587;
+    c(T_fineC<=0)=273.86;
 end
 % Rayleigh et al (2013) doi:10.1002/2013WR013958
 TdC=c.*(log(rh)+b.*T_fineC./(c+T_fineC))./...
